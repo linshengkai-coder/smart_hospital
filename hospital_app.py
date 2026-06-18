@@ -112,6 +112,35 @@ def show_symptom_section():
         symptoms['skin_rash'] = st.checkbox("🔴 Skin Rash")
 
     return symptoms
+def show_duration_section():
+    """Returns chief_complaint and duration strings"""
+    st.subheader("2. How long have you had these symptoms?")
+
+    col1, col2 = st.columns(2)
+    with col1:
+        chief_complaint = st.selectbox("Chief complaint", options=list(cc_map.keys()))
+    with col2:
+        duration = st.selectbox("Duration", options=list(dur_map.keys()), index=1)
+
+    return chief_complaint, duration
+  
+def show_severity_section():
+    """Returns temperature and heart rate strings"""
+    st.subheader("3. How would you rate the severity?")
+
+    col1, col2 = st.columns(2)
+    with col1:
+        temperature = st.selectbox("Temperature", options=list(temp_map.keys()), index=1)
+    with col2:
+        heart_rate = st.selectbox("Heart rate", options=list(hr_map.keys()), index=1)
+
+    return temperature, heart_rate
+
+def main():
+    st.set_page_config(page_title="Smart Hospital Patient Navigator", page_icon="🏥", layout="wide")
+
+    show_header()
+
 
 def main():
     st.set_page_config(page_title="Smart Hospital Patient Navigator", page_icon='🏥', layout="wide")
@@ -119,7 +148,7 @@ def main():
     show_header()
 
 
-if__name__=="__main__":
+if __name__ == "__main__":
    main()
 
 
