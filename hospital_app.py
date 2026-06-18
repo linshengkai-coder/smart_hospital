@@ -60,7 +60,7 @@ DEPT_INFO = {
 
 def predict_department(inputs: dict) -> tuple[str,float,list]:
  patient_df = pd.DataFrame([inputs])
- patient_df[cols_to_scale scaler.transform(patient_df[cols_to_scale])
+ patient_df[cols_to_scale scaler.transform(patient_df[cols_to_scale])]
  #run the model
  predicted_class = model.predict(patient_df[features])[0]
  all_proba = model.predict_proba(patient_df[features])[0]
