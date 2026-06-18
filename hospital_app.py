@@ -58,7 +58,7 @@ DEPT_INFO = {
 }
 
 
-def predict_department(inputs: dict) -> tuple[str,float,list]
+def predict_department(inputs: dict) -> tuple[str,float,list]:
  patient_df = pd.DataFrame([inputs])
  patient_df[cols_to_scale scaler.transform(patient_df[cols_to_scale])
  #run the model
