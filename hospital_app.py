@@ -5,7 +5,7 @@ import pickle
 #LOAD MODEL
  
 @st.cache_resource
-def load_mode():
+def load_model():
   with open('hospital_model_linshengkai.pkl','rb') as f:
     return pickle.load(f)
 
