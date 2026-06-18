@@ -2,36 +2,38 @@ import streamlit as st
 import pandas as pd
 import pickle
 
-#LOAD MODEL
- 
+# LOAD MODEL
+
 @st.cache_resource
 def load_model():
-  with open('hospital_model_linshengkai.pkl','rb') as f:
+  with open('hospital_model.pkl', 'rb') as f:
     return pickle.load(f)
 
 bundle = load_model()
 
-#unpack our bundle into seperate columns/data
+# Unpack our bundle into seperate columns/data
 model = bundle['model']
 scaler = bundle['scaler']
 features = bundle['features']
 cols_to_scale = bundle['cols_to_scale']
-dept_map_inv = bundle['dept_Map_inv']
+dept_map_inv = bundle['dept_map_inv']
 gender_map = bundle['gender_map']
 temp_map = bundle['temp_map']
 hr_map = bundle['hr_map']
-dur_map = bundle ['dur_map']
+dur_map = bundle['dur_map']
 cc_map = bundle['cc_map']
 
-#Department info
+# Department info
 DEPT_INFO = {
-    'Respiratory Medicine': {
-        'icon': '🫁', 'color': '#0284c7',
-        'desc': 'Specialises in conditions affecting the lungs and airways.',
-        'steps': ['Visit Level 2, Wing B', 'Estimated wait: 15–25 min', 'Please wear a mask'],
-    },
-    'Cardiology': {
-        'icon': '❤️', 'color': '#dc2626',
+  'Respiratory Medicine' : {
+    'icon': '💨',
+    'color': '#0284c7',
+    'desc': 'Specialises in conditions affecting the lungs and airways.',
+    'step': ['Visit level 2, Wing B', 'Estimated wait: 15-25 min', 'please wear mask'],
+  },
+  'Cardiology': {
+        'icon': '❤️', 
+        'color': '#dc2626',
         'desc': 'Specialises in heart and cardiovascular conditions.',
         'steps': ['Visit Level 3, Wing A', 'Estimated wait: 20–30 min', 'Bring any previous ECG reports'],
     },
@@ -58,34 +60,34 @@ DEPT_INFO = {
 }
 
 
-def predict_department(inputs: dict) -> tuple[str,float,list]:
- patient_df = pd.DataFrame([inputs])
- patient_df[cols_to_scale] = scaler.transform(patient_df[cols_to_scale])
- #run the model
- predicted_class = model.predict(patient_df[features])[0]
- all_proba = model.predict_proba(patient_df[features])[0]
+def predict_department(inputs: dict) -> tuple[str, float, list]:
+  patient_df = pd.DataFrame([inputs])
+  patient_df[cols_to_scale] = scaler.transform(patient_df[cols_to_scale])
+  # Run the Model
+  predicted_class = model.predict(patient_df[features])[0]
+  all_proba = model.predict_proba(patient_df[features])[0]
 
-# Convert Number to human readable label
- dept_name = dept_map_inv[predicted_class]
- confidence = all_proba[predicted_class]*100
+  # Conver Number to human readable label
+  dept_name = dept_map_inv[predicted_class]
+  confidence = all_proba[predicted_class] * 100
 
- return dept_name, confidence, all_proba
+  return dept_name, confidence, all_proba
 
 def show_header():
- st.markdown("""
-  <div style="background: linear-gradient(135deg, #1e3a8a,#1a56db,#0ea5e9);
-              padding:3rem 2rem; text-align: center; margin-bottom: 2rem:">
-      <p style = "color: #ededed ; font-size: 13px;
-          FUTURE CLASSROOM: Machine Learning
-      </p>
-      <h1 style = "color:white;">
-        Smart Hospital Patient Navigator
-      </h1>
-      <p style = color : white;font-size: 18px;>
-          Find the right department for your symptoms
-      </p>
-  </div>
- """, unsafe_allow_html=True)
+  st.markdown("""
+    <div style="background: linear-gradient(135deg, #1e3a8a, #1a56db, #0ea5e9);
+                padding: 3rem 2rem; text-align: center; margin-bottom: 2rem;">
+        <p style="color: #ededed; font-size: 13px;>
+            FUTURE CLASSROOM: Machine Learning
+        </p>
+        <h1 style="color: white;">
+          Smart Hospital Patient Navigator
+        </h1>
+        <p style=color: white; font-size: 18px;>
+            Find the right department for your symptoms
+        </p>
+    </div>
+  """, unsafe_allow_html=True)
 
 def show_symptom_section():
     """Returns a dict of symptom checkboxes {symptom_name: True/False}"""
@@ -112,6 +114,7 @@ def show_symptom_section():
         symptoms['skin_rash'] = st.checkbox("🔴 Skin Rash")
 
     return symptoms
+
 def show_duration_section():
     """Returns chief_complaint and duration strings"""
     st.subheader("2. How long have you had these symptoms?")
@@ -141,16 +144,8 @@ def main():
 
     show_header()
 
-
-def main():
-    st.set_page_config(page_title="Smart Hospital Patient Navigator", page_icon='🏥', layout="wide")
-
-    show_header()
-
-
 if __name__ == "__main__":
-   main()
-
+    main()
 
 
 
